@@ -1,0 +1,65 @@
+:root{
+  --bg:#f6f7fb; --card:#fff; --border:#e5e7eb;
+  --text:#0f172a; --muted:#64748b;
+  --accent:#4f46e5; --accent2:#4338ca;
+  --good:#16a34a; --bad:#dc2626;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px "Segoe UI",system-ui,-apple-system,Arial}
+.wrap{max-width:980px;margin:0 auto;padding:16px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.brand{font-weight:800}
+.userbar{display:flex;gap:10px;align-items:center}
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 6px 20px rgba(15,23,42,.06);
+}
+h1{margin:0 0 12px 0;font-size:20px}
+.h2{font-weight:800}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.form{display:grid;gap:10px}
+input{
+  padding:10px 12px;border:1px solid var(--border);border-radius:10px;outline:none
+}
+input:focus{border-color:rgba(79,70,229,.6);box-shadow:0 0 0 3px rgba(79,70,229,.12)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 14px;border:1px solid var(--border);
+  background:#fff;border-radius:10px;cursor:pointer;text-decoration:none;color:var(--text)
+}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent2)}
+.btn.ghost{background:transparent}
+.alert{padding:10px 12px;border-radius:10px;background:#fff1f2;border:1px solid #fecdd3;color:#9f1239;margin-bottom:10px}
+
+.quiz-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.timer{font-weight:800}
+.progress{height:10px;background:#eef2ff;border-radius:999px;overflow:hidden;margin:10px 0 14px}
+.progress .bar{height:100%;background:var(--accent)}
+.qtext{padding:12px;border:1px solid var(--border);border-radius:12px;background:#fff;margin-bottom:12px;white-space:pre-wrap}
+
+.options{display:grid;gap:10px}
+.opt{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:12px;border:1px solid var(--border);border-radius:12px;
+  background:#fff;
+}
+.opt input{margin-top:2px}
+.opt .opt-text{
+  /* ключевое: перенос по словам + читаемость */
+  white-space:normal;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+  line-height:1.35;
+}
+.opt.correct{border-color:rgba(22,163,74,.45); background:rgba(22,163,74,.06)}
+.opt.correct .opt-text{color:var(--good);font-weight:600}
+.opt.wrong{border-color:rgba(220,38,38,.45); background:rgba(220,38,38,.06)}
+.opt.wrong .opt-text{color:var(--bad);font-weight:600}
+
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.kv{display:grid;gap:6px;margin:10px 0 12px}

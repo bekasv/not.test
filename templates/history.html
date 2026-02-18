@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>История</h1>
+  <div class="kv">
+    {% for a in attempts %}
+      <div style="display:flex;justify-content:space-between;gap:12px">
+        <div>{{ a.timestamp }} — <b>{{ a.score }}/{{ a.total_questions }}</b> ({{ a.percent }}%)</div>
+        <a class="btn" href="/history/{{ a.id }}/csv">CSV</a>
+      </div>
+    {% endfor %}
+  </div>
+  <a class="btn" href="/dashboard">Назад</a>
+</div>
+{% endblock %}

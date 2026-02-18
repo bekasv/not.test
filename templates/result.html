@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Результат</h1>
+  <div class="kv">
+    <div><span class="muted">Балл:</span> <b>{{ attempt.score }}/{{ attempt.total_questions }}</b></div>
+    <div><span class="muted">Процент:</span> <b>{{ attempt.percent }}%</b></div>
+    <div><span class="muted">Дата:</span> <b>{{ attempt.timestamp }}</b></div>
+  </div>
+  <h3>По темам</h3>
+  <div class="kv">
+    {% for _, st in per.items() %}
+      <div>{{ st.title }} — <b>{{ st.correct }}</b> верно</div>
+    {% endfor %}
+  </div>
+  <a class="btn" href="/dashboard">В меню</a>
+  <a class="btn" href="/history">История</a>
+</div>
+{% endblock %}

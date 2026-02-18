@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid">
+  <div class="card">
+    <h1>Главное меню</h1>
+    {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+    <div class="kv">
+      <div><span class="muted">Вопросов в базе:</span> <b>{{ total_questions }}</b></div>
+      <div><span class="muted">Тест:</span> <b>{{ test_size }}</b> вопросов</div>
+      <div><span class="muted">Длительность:</span> <b>{{ duration_minutes }}</b> минут</div>
+    </div>
+
+    <form method="post" action="/quiz/start">
+      <button class="btn primary" type="submit">Начать тест</button>
+      <a class="btn" href="/history">История результатов</a>
+    </form>
+
+    {% if user.is_admin %}
+    <hr />
+    <a class="btn" href="/admin/users">Админ: пользователи</a>
+    <a class="btn" href="/admin/upload">Админ: загрузка вопросов</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

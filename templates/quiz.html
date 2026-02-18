@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <div class="quiz-top">
+    <div>
+      <div class="h2">Вопрос {{ n }}/{{ total }}</div>
+      <div class="muted">{{ theme_title }}</div>
+    </div>
+    <div class="timer" data-remaining="{{ remaining_seconds }}">
+      ⏱ <span class="mmss">--:--</span>
+    </div>
+  </div>
+
+  <div class="progress">
+    <div class="bar" style="width: {{ (n/total*100)|round(1) }}%"></div>
+  </div>
+
+  <div class="qtext">{{ q.text }}</div>
+
+  <form method="post" action="/quiz/{{ attempt_id }}/{{ n }}/confirm" id="answerForm">
+    <div class="options">
+      {% for i in range(4) %}
+        {% set opt = [q.opt0, q.opt1, q.opt2, q.opt3][i] %}
+        {% set isSel = i in selected %}
+        {% set isCor = i in correct %}
+        {% set cls = "" %}
+        {% if confirmed %}
+          {% if isCor %}{% set cls = "correct" %}
+          {% elif isSel and not isCor %}{% set cls = "wrong" %}
+          {% endif %}
+        {% endif %}
+
+        <label class="opt {{ cls }}">
+          {% if qtype == "single_choice" %}
+            <input type="radio" name="selected" value="{{ i }}" {% if isSel %}checked{% endif %} {% if confirmed %}disabled{% endif %}>
+          {% else %}
+            <input type="checkbox" name="selected" value="{{ i }}" {% if isSel %}checked{% endif %} {% if confirmed %}disabled{% endif %}>
+          {% endif %}
+          <span class="opt-text">{{ opt }}</span>
+        </label>
+      {% endfor %}
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/quiz/{{ attempt_id }}/{{ 1 if n<=1 else n-1 }}">Назад</a>
+
+      {% if not confirmed %}
+        <button class="btn primary" type="submit" id="confirmBtn" disabled>Далее</button>
+        <button class="btn" type="submit" formmethod="post" formaction="/quiz/{{ attempt_id }}/{{ n }}/skip">Пропустить</button>
+      {% else %}
+        {% if n == total %}
+          <button class="btn primary" type="submit" formmethod="post" formaction="/quiz/{{ attempt_id }}/finish">Завершить</button>
+        {% else %}
+          <a class="btn primary" href="/quiz/{{ attempt_id }}/{{ n+1 }}">Далее</a>
+        {% endif %}
+      {% endif %}
+
+      <button class="btn ghost" type="submit" formmethod="post" formaction="/quiz/{{ attempt_id }}/finish">Завершить тест</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

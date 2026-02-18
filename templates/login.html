@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Вход</h1>
+  {% if error %}<div class="alert">{{ error }}</div>{% endif %}
+  <form method="post" action="/login" class="form">
+    <label>Логин</label>
+    <input name="username" required />
+    <label>Пароль</label>
+    <input name="password" type="password" required />
+    <button class="btn primary" type="submit">Войти</button>
+  </form>
+  <p class="muted small">Первый запуск: admin / admin123 (поменяй сразу).</p>
+</div>
+{% endblock %}

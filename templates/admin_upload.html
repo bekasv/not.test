@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Админ: загрузка вопросов</h1>
+  {% if msg %}<div class="alert">{{ msg }}</div>{% endif %}
+  <form method="post" action="/admin/upload" enctype="multipart/form-data" class="form" style="max-width:520px">
+    <label>test_questions.json</label>
+    <input type="file" name="file" accept=".json" required>
+    <button class="btn primary" type="submit">Загрузить</button>
+  </form>
+  <p class="muted small">Загрузка перезапишет текущую базу вопросов.</p>
+  <a class="btn" href="/dashboard">Назад</a>
+</div>
+{% endblock %}

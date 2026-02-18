@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+  <h1>Админ: пользователи</h1>
+  {% if msg %}<div class="alert">{{ msg }}</div>{% endif %}
+
+  <h3>Создать пользователя</h3>
+  <form method="post" action="/admin/users/create" class="form" style="max-width:420px">
+    <label>Логин</label><input name="username" required>
+    <label>Пароль</label><input name="password" type="password" required>
+    <label><input type="checkbox" name="is_admin" value="1"> Админ</label>
+    <button class="btn primary" type="submit">Создать</button>
+  </form>
+
+  <hr style="margin:18px 0">
+
+  <h3>Список</h3>
+  <div class="kv">
+    {% for u in users %}
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center">
+        <div><b>{{ u.username }}</b> <span class="muted">{% if u.is_admin %}(admin){% endif %}</span></div>
+        <form method="post" action="/admin/users/reset" style="display:flex;gap:8px;align-items:center">
+          <input type="hidden" name="user_id" value="{{ u.id }}">
+          <input name="new_password" placeholder="Новый пароль" required>
+          <button class="btn" type="submit">Сбросить</button>
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+
+  <hr style="margin:18px 0">
+  <a class="btn" href="/dashboard">Назад</a>
+</div>
+{% endblock %}
