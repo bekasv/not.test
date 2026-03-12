@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система Тестирования</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
+
+    <div id="app" class="max-w-4xl mx-auto">
+        <div id="login-screen" class="min-h-[80vh] flex items-center justify-center">
+            <div class="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-md space-y-6">
+                <h1 class="text-3xl font-black text-center text-blue-500 italic">ВХОД</h1>
+                <p class="text-center text-slate-500 text-sm">Введите данные для доступа</p>
+                <input type="text" id="login-username" placeholder="Логин" class="w-full p-4 bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="password" id="login-password" placeholder="Пароль" class="w-full p-4 bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="handleLogin()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition shadow-lg shadow-blue-900/40">Войти</button>
+                <p class="text-center text-xs text-slate-600">Admin: admin / admin123</p>
+            </div>
+        </div>
+
+        <div id="admin-panel" class="hidden space-y-8">
+            <div class="flex justify-between items-center bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                <h1 class="text-2xl font-black uppercase">Управление</h1>
+                <button onclick="logout()" class="text-red-400 font-bold">Выйти</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800">
+                <input type="text" id="new-user" placeholder="Логин" class="bg-slate-800 p-3 rounded-xl outline-none">
+                <input type="password" id="new-pass" placeholder="Пароль" class="bg-slate-800 p-3 rounded-xl outline-none">
+                <input type="date" id="new-expiry" class="bg-slate-800 p-3 rounded-xl outline-none text-slate-400">
+                <button onclick="addUser()" class="bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition">Добавить</button>
+            </div>
+
+            <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
+                        <tr><th class="p-4">Студент</th><th class="p-4 text-right">Доступ до</th></tr>
+                    </thead>
+                    <tbody id="users-table-body" class="divide-y divide-slate-800"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="main-menu" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h1 class="text-3xl font-black text-white mb-2" id="welcome-msg"></h1>
+                    <p class="text-slate-400 italic">Ваши результаты сохраняются локально</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-blue-900/20 active:scale-95">
+                        Начать тест
+                    </button>
+                    <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 px-6 py-4 rounded-2xl text-sm">Выход</button>
+                </div>
+            </div>
+            <div id="history-section" class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden p-6">
+                <h2 class="text-xl font-bold mb-4">История тестов</h2>
+                <div id="history-list" class="space-y-3"></div>
+            </div>
+        </div>
+
+        <div id="quiz-ui" class="hidden space-y-6">
+            <div class="flex flex-wrap justify-between items-center bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-lg gap-4">
+                <div class="flex items-center gap-6">
+                    <div id="timer" class="text-3xl font-mono font-bold text-orange-500">120:00</div>
+                    <button id="pause-btn" onclick="togglePause()" class="bg-slate-800 px-5 py-2 rounded-xl text-xs font-bold uppercase transition">Пауза</button>
+                </div>
+                <button onclick="confirmEarlyExit()" class="text-red-500 font-bold text-sm underline">Завершить досрочно</button>
+            </div>
+
+            <div id="quiz-container" class="bg-slate-900 p-8 md:p-12 rounded-3xl border border-slate-800 shadow-2xl">
+                <div id="question-meta" class="text-xs text-blue-500 font-black uppercase mb-4 tracking-widest"></div>
+                <h2 id="question-text" class="text-2xl md:text-3xl font-bold mb-8"></h2>
+                <div id="options" class="space-y-4"></div>
+                <div id="feedback" class="mt-8 p-6 rounded-2xl hidden"></div>
+                <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-800/50">
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-8 py-3 bg-slate-800 rounded-xl disabled:opacity-20">Назад</button>
+                    <div class="flex gap-4">
+                        <button id="confirm-btn" onclick="handleConfirm()" class="px-10 py-3 bg-blue-600 rounded-xl font-bold">Подтвердить</button>
+                        <button id="next-btn" onclick="nextQuestion()" class="px-10 py-3 bg-slate-700 rounded-xl hidden">Далее</button>
+                        <button id="finish-btn" onclick="finishQuiz()" class="px-10 py-3 bg-green-600 rounded-xl hidden">Итоги</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden text-center py-20">
+            <h1 class="text-6xl font-black text-blue-500 mb-4" id="final-score-val"></h1>
+            <div class="text-3xl text-slate-400 mb-10" id="final-percent"></div>
+            <button onclick="location.reload()" class="bg-slate-800 px-12 py-4 rounded-2xl font-bold">В меню</button>
+        </div>
+    </div>
+
+    <div id="pause-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-50 hidden flex flex-col items-center justify-center">
+        <h2 class="text-5xl font-black mb-10 tracking-tighter">ПАУЗА</h2>
+        <button onclick="togglePause()" class="bg-blue-600 px-12 py-5 rounded-3xl font-black text-xl">ПРОДОЛЖИТЬ</button>
+    </div>
+
+    <script>
+        // ДАННЫЕ (Вместо БД на GitHub Pages)
+        let users = JSON.parse(localStorage.getItem('quiz_users')) || [
+            {username: 'admin', password: '123', role: 'admin', expiry: '2099-12-31'}
+        ];
+        
+        // ВОПРОСЫ (Вставь свои вопросы прямо сюда)
+        const allQuestions = [
+            {
+                id: 1,
+                theme: { id: 1, title: "Инфраструктура", pick_count: 2 },
+                question: "Что такое сервер?",
+                options: ["Компьютер", "Программа", "Стул", "Кабель"],
+                correct: [0],
+                type: "single_choice"
+            },
+            {
+                id: 2,
+                theme: { id: 1, title: "Инфраструктура", pick_count: 2 },
+                question: "Выберите сетевые протоколы:",
+                options: ["HTTP", "TCP", "HTML", "CSS"],
+                correct: [0, 1],
+                type: "multiple_choice"
+            }
+        ];
+
+        let currentUser = null, quizQuestions = [], currentIndex = 0, score = 0;
+        let userAnswers = {}, confirmedQuestions = new Set(), isPaused = false, timeLeft = 120 * 60, timerInterval;
+
+        function showScreen(id) {
+            ['login-screen', 'admin-panel', 'main-menu', 'quiz-ui', 'result-screen'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('login-username').value;
+            const p = document.getElementById('login-password').value;
+            const user = users.find(x => x.username === u && x.password === p);
+
+            if (user) {
+                if (new Date() > new Date(user.expiry)) return alert("Доступ истек");
+                currentUser = user;
+                if (user.role === 'admin') { renderAdmin(); showScreen('admin-panel'); }
+                else { 
+                    document.getElementById('welcome-msg').innerText = `Привет, ${user.username}!`;
+                    renderHistory();
+                    showScreen('main-menu'); 
+                }
+            } else alert("Ошибка входа");
+        }
+
+        function renderAdmin() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = users.filter(u => u.role !== 'admin').map(u => `
+                <tr><td class="p-4 font-bold">${u.username}</td><td class="p-4 text-right text-orange-400 font-mono">${u.expiry}</td></tr>
+            `).join('');
+        }
+
+        function addUser() {
+            const u = document.getElementById('new-user').value;
+            const p = document.getElementById('new-pass').value;
+            const e = document.getElementById('new-expiry').value;
+            if(!u || !p || !e) return;
+            users.push({username: u, password: p, expiry: e, role: 'student'});
+            localStorage.setItem('quiz_users', JSON.stringify(users));
+            renderAdmin();
+        }
+
+        function startQuiz() {
+            // Простая логика выборки
+            quizQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+            showScreen('quiz-ui');
+            renderQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (!isPaused) {
+                    timeLeft--;
+                    const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
+                    document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                    if (timeLeft <= 0) finishQuiz();
+                }
+            }, 1000);
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            document.getElementById('pause-overlay').classList.toggle('hidden', !isPaused);
+        }
+
+        function renderQuestion() {
+            const q = quizQuestions[currentIndex], isConfirmed = confirmedQuestions.has(q.id);
+            document.getElementById('question-meta').innerText = q.theme.title;
+            document.getElementById('question-text').innerText = q.question;
+            document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${quizQuestions.length}`;
+            
+            const cont = document.getElementById('options');
+            cont.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const isSelected = (userAnswers[q.id] || []).includes(idx);
+                let border = isSelected ? 'border-blue-500 bg-blue-600/10' : 'border-slate-800 bg-slate-800/40';
+                
+                if (isConfirmed) {
+                    if (q.correct.includes(idx)) border = 'border-green-500 bg-green-500/20 text-green-400';
+                    else if (isSelected) border = 'border-red-500 bg-red-500/20 text-red-400';
+                }
+
+                const shape = q.type === 'single_choice' ? 'rounded-full' : 'rounded-md';
+                const iconBg = isSelected ? 'bg-blue-500 border-blue-500' : 'bg-transparent border-slate-600';
+
+                const div = document.createElement('div');
+                div.className = `p-5 rounded-2xl border-2 flex items-start gap-4 transition-all ${!isConfirmed ? 'cursor-pointer hover:border-slate-600' : ''} ${border}`;
+                div.innerHTML = `
+                    <div class="w-6 h-6 flex-shrink-0 border-2 mt-0.5 flex items-center justify-center ${shape} ${iconBg}">
+                        ${isSelected ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>' : ''}
+                    </div>
+                    <div class="flex-1 text-lg">${opt}</div>
+                `;
+                if(!isConfirmed) div.onclick = () => selectOption(q.id, idx, q.type);
+                cont.appendChild(div);
+            });
+
+            document.getElementById('confirm-btn').classList.toggle('hidden', isConfirmed);
+            document.getElementById('next-btn').classList.toggle('hidden', !isConfirmed || currentIndex === quizQuestions.length - 1);
+            document.getElementById('finish-btn').classList.toggle('hidden', !isConfirmed || currentIndex !== quizQuestions.length - 1);
+            document.getElementById('feedback').classList.toggle('hidden', !isConfirmed);
+        }
+
+        function selectOption(qId, idx, type) {
+            if (!userAnswers[qId]) userAnswers[qId] = [];
+            if (type === 'single_choice') userAnswers[qId] = [idx];
+            else {
+                const pos = userAnswers[qId].indexOf(idx);
+                pos > -1 ? userAnswers[qId].splice(pos, 1) : userAnswers[qId].push(idx);
+            }
+            renderQuestion();
+        }
+
+        function handleConfirm() {
+            const q = quizQuestions[currentIndex], userSel = userAnswers[q.id] || [];
+            if (!userSel.length) return;
+            confirmedQuestions.add(q.id);
+            const isCorrect = JSON.stringify(userSel.sort()) === JSON.stringify(q.correct.sort());
+            if (isCorrect) score++;
+            
+            const fb = document.getElementById('feedback');
+            fb.innerText = isCorrect ? "ВЕРНО!" : `ОШИБКА! Правильно: ${q.correct.map(i => q.options[i]).join(', ')}`;
+            fb.className = `mt-8 p-6 rounded-2xl font-black text-center border ${isCorrect ? 'bg-green-500/10 text-green-500 border-green-500/50' : 'bg-red-500/10 text-red-500 border-red-500/50'}`;
+            renderQuestion();
+        }
+
+        function nextQuestion() { currentIndex++; renderQuestion(); }
+        function prevQuestion() { if(currentIndex > 0) { currentIndex--; renderQuestion(); } }
+
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            const percent = ((score / quizQuestions.length) * 100).toFixed(1);
+            
+            // Сохраняем результат в историю пользователя
+            const results = JSON.parse(localStorage.getItem('quiz_results') || '[]');
+            results.push({user: currentUser.username, score, total: quizQuestions.length, percent, date: new Date()});
+            localStorage.setItem('quiz_results', JSON.stringify(results));
+
+            showScreen('result-screen');
+            document.getElementById('final-score-val').innerText = `${score} / ${quizQuestions.length}`;
+            document.getElementById('final-percent').innerText = `${percent}%`;
+        }
+
+        function renderHistory() {
+            const allRes = JSON.parse(localStorage.getItem('quiz_results') || '[]');
+            const myRes = allRes.filter(r => r.user === currentUser.username).reverse();
+            document.getElementById('history-list').innerHTML = myRes.map(r => `
+                <div class="bg-slate-800 p-4 rounded-xl flex justify-between">
+                    <span>${r.percent}% (${r.score}/${r.total})</span>
+                    <span class="text-slate-500 text-xs">${new Date(r.date).toLocaleDateString()}</span>
+                </div>
+            `).join('') || 'История пуста';
+        }
+
+        function logout() { location.reload(); }
+        function confirmEarlyExit() { if(confirm("Завершить тест?")) finishQuiz(); }
+    </script>
+</body>
+</html>
