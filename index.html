@@ -3,44 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Система Тестирования</title>
+    <title>Система Тестирования — Infrastructure Development</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        @keyframes bounce-short { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        .animate-bounce-short { animation: bounce-short 0.3s ease-in-out; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8 font-sans">
 
     <div id="app" class="max-w-4xl mx-auto">
-        <div id="login-screen" class="min-h-[80vh] flex items-center justify-center">
-            <div class="bg-slate-900 p-10 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-md space-y-6">
-                <h1 class="text-3xl font-black text-center text-blue-500 italic">ВХОД</h1>
-                <p class="text-center text-slate-500 text-sm">Введите данные для доступа</p>
-                <input type="text" id="login-username" placeholder="Логин" class="w-full p-4 bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="password" id="login-password" placeholder="Пароль" class="w-full p-4 bg-slate-800 rounded-xl border-none outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="handleLogin()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-xl font-bold transition shadow-lg shadow-blue-900/40">Войти</button>
-                <p class="text-center text-xs text-slate-600">Admin: admin / admin123</p>
+        <div id="login-screen" class="min-h-[85vh] flex items-center justify-center">
+            <div class="bg-slate-900 p-8 md:p-12 rounded-3xl border border-slate-800 shadow-2xl w-full max-w-md space-y-6">
+                <div class="text-center space-y-2">
+                    <h1 class="text-4xl font-black text-blue-500 tracking-tighter italic">ВХОД</h1>
+                    <p class="text-slate-500 text-sm uppercase tracking-widest font-bold">Система тестирования</p>
+                </div>
+                <div class="space-y-4">
+                    <input type="text" id="login-username" placeholder="Логин" class="w-full p-4 bg-slate-800 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                    <input type="password" id="login-password" placeholder="Пароль" class="w-full p-4 bg-slate-800 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+                </div>
+                <button onclick="handleLogin()" class="w-full py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black text-lg transition-all shadow-lg shadow-blue-900/40 active:scale-95">ВОЙТИ</button>
+                <p class="text-center text-[10px] text-slate-600 uppercase">Default Admin: admin / admin123</p>
             </div>
         </div>
 
         <div id="admin-panel" class="hidden space-y-8">
-            <div class="flex justify-between items-center bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <h1 class="text-2xl font-black uppercase">Управление</h1>
-                <button onclick="logout()" class="text-red-400 font-bold">Выйти</button>
+            <div class="flex justify-between items-center bg-slate-900 p-6 rounded-3xl border border-slate-800 shadow-xl">
+                <h1 class="text-2xl font-black border-l-4 border-blue-600 pl-4">АДМИН-ПАНЕЛЬ</h1>
+                <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 px-6 py-2 rounded-xl text-sm font-bold">ВЫХОД</button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-900 p-6 rounded-2xl border border-slate-800">
-                <input type="text" id="new-user" placeholder="Логин" class="bg-slate-800 p-3 rounded-xl outline-none">
-                <input type="password" id="new-pass" placeholder="Пароль" class="bg-slate-800 p-3 rounded-xl outline-none">
-                <input type="date" id="new-expiry" class="bg-slate-800 p-3 rounded-xl outline-none text-slate-400">
-                <button onclick="addUser()" class="bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition">Добавить</button>
+            <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl space-y-4">
+                <h2 class="text-blue-500 font-bold uppercase text-sm tracking-widest">Добавить студента</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <input type="text" id="new-user" placeholder="Логин" class="bg-slate-800 p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-600">
+                    <input type="password" id="new-pass" placeholder="Пароль" class="bg-slate-800 p-4 rounded-xl outline-none focus:ring-2 focus:ring-blue-600">
+                    <input type="date" id="new-expiry" class="bg-slate-800 p-4 rounded-xl outline-none text-slate-400">
+                    <button onclick="addUser()" class="bg-blue-600 hover:bg-blue-500 font-bold rounded-xl transition shadow-lg shadow-blue-900/20">СОЗДАТЬ</button>
+                </div>
             </div>
 
-            <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
-                <table class="w-full text-left">
-                    <thead class="bg-slate-800 text-slate-400 text-xs uppercase">
-                        <tr><th class="p-4">Студент</th><th class="p-4 text-right">Доступ до</th></tr>
+            <div class="bg-slate-900 rounded-3xl border border-slate-800 overflow-hidden shadow-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-800/50 text-slate-500 text-[10px] uppercase font-black">
+                        <tr><th class="p-5">Студент</th><th class="p-5 text-right">Срок доступа</th></tr>
                     </thead>
                     <tbody id="users-table-body" class="divide-y divide-slate-800"></tbody>
                 </table>
@@ -48,132 +57,153 @@
         </div>
 
         <div id="main-menu" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 p-8 rounded-3xl shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="bg-slate-900 border border-slate-800 p-8 rounded-[2rem] shadow-2xl flex flex-col md:flex-row justify-between items-center gap-6">
                 <div>
-                    <h1 class="text-3xl font-black text-white mb-2" id="welcome-msg"></h1>
-                    <p class="text-slate-400 italic">Ваши результаты сохраняются локально</p>
+                    <h1 class="text-3xl font-black mb-2" id="welcome-msg"></h1>
+                    <p class="text-slate-500">Выберите действие для продолжения</p>
                 </div>
-                <div class="flex gap-4">
-                    <button onclick="startQuiz()" class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-bold transition-all shadow-lg shadow-blue-900/20 active:scale-95">
-                        Начать тест
-                    </button>
-                    <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 px-6 py-4 rounded-2xl text-sm">Выход</button>
+                <div class="flex gap-4 w-full md:w-auto">
+                    <button onclick="startQuiz()" class="flex-1 bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-2xl font-black transition-all shadow-lg shadow-blue-900/30 active:scale-95">НАЧАТЬ ТЕСТ</button>
+                    <button onclick="logout()" class="bg-slate-800 hover:bg-slate-700 px-6 py-4 rounded-2xl font-bold">ВЫХОД</button>
                 </div>
             </div>
-            <div id="history-section" class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden p-6">
-                <h2 class="text-xl font-bold mb-4">История тестов</h2>
-                <div id="history-list" class="space-y-3"></div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-[2.5rem] p-8 shadow-xl">
+                <h2 class="text-xl font-black mb-6 flex items-center gap-2">
+                    <span class="w-2 h-8 bg-blue-600 rounded-full"></span> ИСТОРИЯ ТЕСТОВ
+                </h2>
+                <div id="history-list" class="space-y-4 max-h-[400px] overflow-y-auto custom-scrollbar pr-2"></div>
             </div>
         </div>
 
         <div id="quiz-ui" class="hidden space-y-6">
             <div class="flex flex-wrap justify-between items-center bg-slate-900 p-5 rounded-2xl border border-slate-800 shadow-lg gap-4">
                 <div class="flex items-center gap-6">
-                    <div id="timer" class="text-3xl font-mono font-bold text-orange-500">120:00</div>
-                    <button id="pause-btn" onclick="togglePause()" class="bg-slate-800 px-5 py-2 rounded-xl text-xs font-bold uppercase transition">Пауза</button>
+                    <div id="timer" class="text-3xl font-mono font-black text-orange-500">120:00</div>
+                    <button id="pause-btn" onclick="togglePause()" class="bg-slate-800 hover:bg-slate-700 px-5 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition">Пауза</button>
                 </div>
-                <button onclick="confirmEarlyExit()" class="text-red-500 font-bold text-sm underline">Завершить досрочно</button>
+                <div id="progress-text" class="text-slate-400 font-bold text-sm"></div>
+                <button onclick="confirmEarlyExit()" class="text-red-500 hover:text-red-400 font-black text-xs uppercase underline underline-offset-4">Завершить досрочно</button>
             </div>
 
-            <div id="quiz-container" class="bg-slate-900 p-8 md:p-12 rounded-3xl border border-slate-800 shadow-2xl">
-                <div id="question-meta" class="text-xs text-blue-500 font-black uppercase mb-4 tracking-widest"></div>
-                <h2 id="question-text" class="text-2xl md:text-3xl font-bold mb-8"></h2>
-                <div id="options" class="space-y-4"></div>
-                <div id="feedback" class="mt-8 p-6 rounded-2xl hidden"></div>
+            <div id="quiz-container" class="bg-slate-900 p-8 md:p-12 rounded-[2.5rem] border border-slate-800 shadow-2xl relative min-h-[500px] flex flex-col">
+                <div id="question-meta" class="text-xs text-blue-500 font-black uppercase mb-4 tracking-[0.2em]"></div>
+                <h2 id="question-text" class="text-2xl md:text-3xl font-bold mb-10 leading-snug"></h2>
+                
+                <div id="options" class="space-y-4 flex-grow text-white"></div>
+
+                <div id="feedback" class="mt-8 p-6 rounded-2xl hidden font-bold text-center border animate-bounce-short"></div>
+
                 <div class="flex justify-between items-center mt-12 pt-8 border-t border-slate-800/50">
-                    <button id="prev-btn" onclick="prevQuestion()" class="px-8 py-3 bg-slate-800 rounded-xl disabled:opacity-20">Назад</button>
+                    <button id="prev-btn" onclick="prevQuestion()" class="px-8 py-3 bg-slate-800 rounded-xl font-bold hover:bg-slate-700 disabled:opacity-20 transition">НАЗАД</button>
                     <div class="flex gap-4">
-                        <button id="confirm-btn" onclick="handleConfirm()" class="px-10 py-3 bg-blue-600 rounded-xl font-bold">Подтвердить</button>
-                        <button id="next-btn" onclick="nextQuestion()" class="px-10 py-3 bg-slate-700 rounded-xl hidden">Далее</button>
-                        <button id="finish-btn" onclick="finishQuiz()" class="px-10 py-3 bg-green-600 rounded-xl hidden">Итоги</button>
+                        <button id="confirm-btn" onclick="handleConfirm()" class="px-10 py-3 bg-blue-600 rounded-xl font-black hover:bg-blue-500 transition shadow-lg shadow-blue-900/40">ОТВЕТИТЬ</button>
+                        <button id="next-btn" onclick="nextQuestion()" class="px-10 py-3 bg-slate-700 rounded-xl hidden font-black hover:bg-slate-600 transition">ДАЛЕЕ</button>
+                        <button id="finish-btn" onclick="finishQuiz()" class="px-10 py-3 bg-green-600 rounded-xl hidden font-black hover:bg-green-500 transition shadow-lg shadow-green-900/40">ИТОГИ</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="result-screen" class="hidden text-center py-20">
-            <h1 class="text-6xl font-black text-blue-500 mb-4" id="final-score-val"></h1>
-            <div class="text-3xl text-slate-400 mb-10" id="final-percent"></div>
-            <button onclick="location.reload()" class="bg-slate-800 px-12 py-4 rounded-2xl font-bold">В меню</button>
+        <div id="result-screen" class="hidden text-center py-24 space-y-8">
+            <div class="inline-block p-10 bg-blue-600/10 rounded-full border-2 border-blue-600/20">
+                <h1 class="text-8xl font-black text-blue-500" id="final-score-val"></h1>
+            </div>
+            <div class="text-4xl font-bold text-white uppercase tracking-widest" id="final-percent"></div>
+            <p class="text-slate-500">Тест завершен и сохранен в локальной базе</p>
+            <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-700 px-12 py-5 rounded-3xl font-black text-xl transition mt-10">ВЕРНУТЬСЯ В МЕНЮ</button>
         </div>
     </div>
 
-    <div id="pause-overlay" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-50 hidden flex flex-col items-center justify-center">
-        <h2 class="text-5xl font-black mb-10 tracking-tighter">ПАУЗА</h2>
-        <button onclick="togglePause()" class="bg-blue-600 px-12 py-5 rounded-3xl font-black text-xl">ПРОДОЛЖИТЬ</button>
+    <div id="pause-overlay" class="fixed inset-0 bg-slate-950/98 backdrop-blur-2xl z-50 hidden flex flex-col items-center justify-center text-center">
+        <div class="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mb-10 animate-pulse">
+            <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"></path></svg>
+        </div>
+        <h2 class="text-6xl font-black mb-12 tracking-tighter">ТЕСТ НА ПАУЗЕ</h2>
+        <button onclick="togglePause()" class="bg-blue-600 hover:bg-blue-500 px-16 py-6 rounded-full font-black text-2xl shadow-2xl transition active:scale-90">ПРОДОЛЖИТЬ</button>
     </div>
 
     <script>
-        // ДАННЫЕ (Вместо БД на GitHub Pages)
+        // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
         let users = JSON.parse(localStorage.getItem('quiz_users')) || [
-            {username: 'admin', password: '123', role: 'admin', expiry: '2099-12-31'}
+            {username: 'admin', password: 'admin123', role: 'admin', expiry: '2099-12-31'}
         ];
-        
-        // ВОПРОСЫ (Вставь свои вопросы прямо сюда)
-        const allQuestions = [
-            {
-                id: 1,
-                theme: { id: 1, title: "Инфраструктура", pick_count: 2 },
-                question: "Что такое сервер?",
-                options: ["Компьютер", "Программа", "Стул", "Кабель"],
-                correct: [0],
-                type: "single_choice"
-            },
-            {
-                id: 2,
-                theme: { id: 1, title: "Инфраструктура", pick_count: 2 },
-                question: "Выберите сетевые протоколы:",
-                options: ["HTTP", "TCP", "HTML", "CSS"],
-                correct: [0, 1],
-                type: "multiple_choice"
-            }
-        ];
+        let allQuestions = [], quizQuestions = [], currentUser = null;
+        let currentIndex = 0, score = 0, userAnswers = {}, confirmedQuestions = new Set();
+        let isPaused = false, timeLeft = 120 * 60, timerInterval;
 
-        let currentUser = null, quizQuestions = [], currentIndex = 0, score = 0;
-        let userAnswers = {}, confirmedQuestions = new Set(), isPaused = false, timeLeft = 120 * 60, timerInterval;
-
-        function showScreen(id) {
-            ['login-screen', 'admin-panel', 'main-menu', 'quiz-ui', 'result-screen'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
+        // ЗАГРУЗКА JSON
+        async function loadQuestions() {
+            try {
+                const res = await fetch('questions.json');
+                if(!res.ok) throw new Error();
+                allQuestions = await res.json();
+                console.log("JSON loaded");
+            } catch (e) { console.error("Could not load questions.json"); }
         }
 
+        // ЛОГИКА ЭКРАНОВ
+        function showScreen(id) {
+            ['login-screen', 'admin-panel', 'main-menu', 'quiz-ui', 'result-screen'].forEach(s => 
+                document.getElementById(s).classList.toggle('hidden', s !== id)
+            );
+        }
+
+        // АВТОРИЗАЦИЯ
         function handleLogin() {
             const u = document.getElementById('login-username').value;
             const p = document.getElementById('login-password').value;
-            const user = users.find(x => x.username === u && x.password === p);
+            const found = users.find(x => x.username === u && x.password === p);
 
-            if (user) {
-                if (new Date() > new Date(user.expiry)) return alert("Доступ истек");
-                currentUser = user;
-                if (user.role === 'admin') { renderAdmin(); showScreen('admin-panel'); }
+            if (found) {
+                if (new Date() > new Date(found.expiry)) return alert("Срок доступа истек!");
+                currentUser = found;
+                if (found.role === 'admin') { renderAdmin(); showScreen('admin-panel'); }
                 else { 
-                    document.getElementById('welcome-msg').innerText = `Привет, ${user.username}!`;
+                    document.getElementById('welcome-msg').innerText = `Салам, ${found.username}!`;
                     renderHistory();
                     showScreen('main-menu'); 
                 }
-            } else alert("Ошибка входа");
+            } else alert("Неверные данные!");
         }
 
+        // АДМИНКА
         function renderAdmin() {
             const tbody = document.getElementById('users-table-body');
             tbody.innerHTML = users.filter(u => u.role !== 'admin').map(u => `
-                <tr><td class="p-4 font-bold">${u.username}</td><td class="p-4 text-right text-orange-400 font-mono">${u.expiry}</td></tr>
+                <tr class="hover:bg-slate-800/30 transition border-b border-slate-800/50">
+                    <td class="p-5 font-bold text-lg">${u.username}</td>
+                    <td class="p-5 text-right font-mono text-orange-400 font-bold">${u.expiry}</td>
+                </tr>
             `).join('');
         }
 
         function addUser() {
-            const u = document.getElementById('new-user').value;
-            const p = document.getElementById('new-pass').value;
-            const e = document.getElementById('new-expiry').value;
-            if(!u || !p || !e) return;
+            const u = document.getElementById('new-user').value, p = document.getElementById('new-pass').value, e = document.getElementById('new-expiry').value;
+            if(!u || !p || !e) return alert("Заполните все поля");
             users.push({username: u, password: p, expiry: e, role: 'student'});
             localStorage.setItem('quiz_users', JSON.stringify(users));
             renderAdmin();
         }
 
-        function startQuiz() {
-            // Простая логика выборки
-            quizQuestions = [...allQuestions].sort(() => 0.5 - Math.random()).slice(0, 10);
+        // КВИЗ
+        async function startQuiz() {
+            if (!allQuestions.length) await loadQuestions();
+            
+            // Группировка и выборка
+            const themes = {};
+            allQuestions.forEach(q => {
+                if(!themes[q.theme.id]) themes[q.theme.id] = { p: q.theme.pick_count, qs: [] };
+                themes[q.theme.id].qs.push(q);
+            });
+            
+            quizQuestions = [];
+            Object.values(themes).forEach(t => {
+                const shuffled = t.qs.sort(() => 0.5 - Math.random());
+                quizQuestions.push(...shuffled.slice(0, t.p));
+            });
+            quizQuestions.sort(() => 0.5 - Math.random());
+
             showScreen('quiz-ui');
             renderQuestion();
             startTimer();
@@ -181,11 +211,11 @@
 
         function startTimer() {
             timerInterval = setInterval(() => {
-                if (!isPaused) {
+                if(!isPaused) {
                     timeLeft--;
                     const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
                     document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                    if (timeLeft <= 0) finishQuiz();
+                    if(timeLeft <= 0) finishQuiz();
                 }
             }, 1000);
         }
@@ -197,7 +227,7 @@
 
         function renderQuestion() {
             const q = quizQuestions[currentIndex], isConfirmed = confirmedQuestions.has(q.id);
-            document.getElementById('question-meta').innerText = q.theme.title;
+            document.getElementById('question-meta').innerText = `РАЗДЕЛ: ${q.theme.title}`;
             document.getElementById('question-text').innerText = q.question;
             document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${quizQuestions.length}`;
             
@@ -206,23 +236,23 @@
 
             q.options.forEach((opt, idx) => {
                 const isSelected = (userAnswers[q.id] || []).includes(idx);
-                let border = isSelected ? 'border-blue-500 bg-blue-600/10' : 'border-slate-800 bg-slate-800/40';
+                let borderStyle = isSelected ? 'border-blue-500 bg-blue-600/10 shadow-[0_0_15px_rgba(59,130,246,0.1)]' : 'border-slate-800 bg-slate-800/40';
                 
                 if (isConfirmed) {
-                    if (q.correct.includes(idx)) border = 'border-green-500 bg-green-500/20 text-green-400';
-                    else if (isSelected) border = 'border-red-500 bg-red-500/20 text-red-400';
+                    if (q.correct.includes(idx)) borderStyle = 'border-green-500 bg-green-500/20 text-green-400';
+                    else if (isSelected) borderStyle = 'border-red-500 bg-red-500/20 text-red-400';
                 }
 
-                const shape = q.type === 'single_choice' ? 'rounded-full' : 'rounded-md';
+                const shape = q.type === 'single_choice' ? 'rounded-full' : 'rounded-lg';
                 const iconBg = isSelected ? 'bg-blue-500 border-blue-500' : 'bg-transparent border-slate-600';
 
                 const div = document.createElement('div');
-                div.className = `p-5 rounded-2xl border-2 flex items-start gap-4 transition-all ${!isConfirmed ? 'cursor-pointer hover:border-slate-600' : ''} ${border}`;
+                div.className = `p-6 rounded-3xl border-2 flex items-start gap-4 transition-all duration-300 ${!isConfirmed ? 'cursor-pointer hover:border-slate-600' : ''} ${borderStyle}`;
                 div.innerHTML = `
-                    <div class="w-6 h-6 flex-shrink-0 border-2 mt-0.5 flex items-center justify-center ${shape} ${iconBg}">
+                    <div class="w-6 h-6 flex-shrink-0 border-2 mt-1 flex items-center justify-center transition-all duration-300 ${shape} ${iconBg}">
                         ${isSelected ? '<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"></path></svg>' : ''}
                     </div>
-                    <div class="flex-1 text-lg">${opt}</div>
+                    <div class="flex-1 text-xl font-medium leading-snug">${opt}</div>
                 `;
                 if(!isConfirmed) div.onclick = () => selectOption(q.id, idx, q.type);
                 cont.appendChild(div);
@@ -232,11 +262,12 @@
             document.getElementById('next-btn').classList.toggle('hidden', !isConfirmed || currentIndex === quizQuestions.length - 1);
             document.getElementById('finish-btn').classList.toggle('hidden', !isConfirmed || currentIndex !== quizQuestions.length - 1);
             document.getElementById('feedback').classList.toggle('hidden', !isConfirmed);
+            document.getElementById('prev-btn').disabled = currentIndex === 0 || isConfirmed;
         }
 
         function selectOption(qId, idx, type) {
-            if (!userAnswers[qId]) userAnswers[qId] = [];
-            if (type === 'single_choice') userAnswers[qId] = [idx];
+            if(!userAnswers[qId]) userAnswers[qId] = [];
+            if(type === 'single_choice') userAnswers[qId] = [idx];
             else {
                 const pos = userAnswers[qId].indexOf(idx);
                 pos > -1 ? userAnswers[qId].splice(pos, 1) : userAnswers[qId].push(idx);
@@ -246,27 +277,26 @@
 
         function handleConfirm() {
             const q = quizQuestions[currentIndex], userSel = userAnswers[q.id] || [];
-            if (!userSel.length) return;
+            if(!userSel.length) return;
             confirmedQuestions.add(q.id);
             const isCorrect = JSON.stringify(userSel.sort()) === JSON.stringify(q.correct.sort());
-            if (isCorrect) score++;
+            if(isCorrect) score++;
             
             const fb = document.getElementById('feedback');
-            fb.innerText = isCorrect ? "ВЕРНО!" : `ОШИБКА! Правильно: ${q.correct.map(i => q.options[i]).join(', ')}`;
-            fb.className = `mt-8 p-6 rounded-2xl font-black text-center border ${isCorrect ? 'bg-green-500/10 text-green-500 border-green-500/50' : 'bg-red-500/10 text-red-500 border-red-500/50'}`;
+            fb.innerText = isCorrect ? "ВЕРНЫЙ ОТВЕТ" : `ОШИБКА. ПРАВИЛЬНЫЙ: ${q.correct.map(i => q.options[i]).join(', ')}`;
+            fb.className = `mt-8 p-6 rounded-3xl font-black text-center border-2 ${isCorrect ? 'bg-green-500/10 text-green-500 border-green-500/30' : 'bg-red-500/10 text-red-500 border-red-500/30'}`;
             renderQuestion();
         }
 
         function nextQuestion() { currentIndex++; renderQuestion(); }
         function prevQuestion() { if(currentIndex > 0) { currentIndex--; renderQuestion(); } }
+        function confirmEarlyExit() { if(confirm("Завершить тест досрочно?")) finishQuiz(); }
 
         function finishQuiz() {
             clearInterval(timerInterval);
             const percent = ((score / quizQuestions.length) * 100).toFixed(1);
-            
-            // Сохраняем результат в историю пользователя
             const results = JSON.parse(localStorage.getItem('quiz_results') || '[]');
-            results.push({user: currentUser.username, score, total: quizQuestions.length, percent, date: new Date()});
+            results.push({user: currentUser.username, score, total: quizQuestions.length, percent, date: new Date().toISOString()});
             localStorage.setItem('quiz_results', JSON.stringify(results));
 
             showScreen('result-screen');
@@ -275,18 +305,26 @@
         }
 
         function renderHistory() {
-            const allRes = JSON.parse(localStorage.getItem('quiz_results') || '[]');
-            const myRes = allRes.filter(r => r.user === currentUser.username).reverse();
-            document.getElementById('history-list').innerHTML = myRes.map(r => `
-                <div class="bg-slate-800 p-4 rounded-xl flex justify-between">
-                    <span>${r.percent}% (${r.score}/${r.total})</span>
-                    <span class="text-slate-500 text-xs">${new Date(r.date).toLocaleDateString()}</span>
+            const all = JSON.parse(localStorage.getItem('quiz_results') || '[]');
+            const my = all.filter(r => r.user === currentUser.username).reverse();
+            const list = document.getElementById('history-list');
+            list.innerHTML = my.map(r => `
+                <div class="bg-slate-800/40 p-5 rounded-2xl border border-slate-800 flex justify-between items-center group hover:border-slate-700 transition">
+                    <div>
+                        <div class="text-2xl font-black text-blue-500">${r.percent}%</div>
+                        <div class="text-[10px] text-slate-500 font-bold uppercase">${new Date(r.date).toLocaleDateString()} ${new Date(r.date).toLocaleTimeString()}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-bold text-slate-300">${r.score} из ${r.total}</div>
+                        <div class="text-[9px] text-slate-600 font-black tracking-widest uppercase">Баллы</div>
+                    </div>
                 </div>
-            `).join('') || 'История пуста';
+            `).join('') || '<p class="text-slate-600 text-center py-4">Результаты отсутствуют</p>';
         }
 
         function logout() { location.reload(); }
-        function confirmEarlyExit() { if(confirm("Завершить тест?")) finishQuiz(); }
+
+        loadQuestions();
     </script>
 </body>
 </html>
